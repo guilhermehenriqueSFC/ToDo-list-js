@@ -1,9 +1,14 @@
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
 function addTask() {
     const newTaskText = document.getElementById("newTaskInput").value;
     if (newTaskText.trim() !== "") {
         tasks.push({ text: newTaskText, completed: false });
+        saveTasks();
         renderTasks();
         document.getElementById("newTaskInput").value = "";
     }
@@ -13,22 +18,26 @@ function editTask(index) {
     const newText = prompt("Edit task:", tasks[index].text);
     if (newText !== null) {
         tasks[index].text = newText;
+        saveTasks();
         renderTasks();
     }
 }
 
 function toggleTaskCompletion(index) {
     tasks[index].completed = !tasks[index].completed;
+    saveTasks();
     renderTasks();
 }
 
 function deleteTask(index) {
     tasks.splice(index, 1);
+    saveTasks();
     renderTasks();
 }
 
 function hideCompletedTasks() {
     tasks = tasks.filter(task => !task.completed);
+    saveTasks();
     renderTasks();
 }
 
